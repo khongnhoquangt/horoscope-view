@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 @import "tailwindcss";
-@import "./tuvi-generator.css";
+
+/* Override Tailwind v4's default dark mode (prefers-color-scheme)
+   to use class-based toggling (.dark on html/body) like the original HTML */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================
    TAILWIND THEME EXTENSIONS
@@ -340,6 +343,46 @@ body.dark {
 }
 
 /* ============================================
+   TOGGLE SWITCH
+   ============================================ */
+.toggle-switch {
+  position: relative;
+  width: 48px;
+  height: 26px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 13px;
+  cursor: pointer;
+  transition: background 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.dark .toggle-switch {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  background: white;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(22px);
+}
+
+.toggle-switch.active {
+  background: linear-gradient(135deg, #DC143C, #D4A017);
+}
+
+/* ============================================
    SUBMENU ANIMATION
    ============================================ */
 .submenu {
@@ -438,4 +481,873 @@ body.dark {
 .dark .newsletter-glass {
   background: linear-gradient(135deg, rgba(107, 16, 16, 0.6) 0%, rgba(74, 4, 4, 0.8));
   border: 1px solid rgba(212, 160, 23, 0.1);
+}
+
+/* tuvi-generator.css — Shadcn-inspired Tử Vi Chart */
+
+:root {
+  --primary-clr: #D4AF37;
+  --primary-dark: #B8860B;
+  --text-main: hsl(240 5.9% 10%);
+  --text-muted: hsl(240 3.8% 46.1%);
+  --bg-page: #FDFBF7;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --border-glass: rgba(212, 175, 55, 0.3);
+  --shadow-glass: 0 8px 32px 0 rgba(139, 69, 19, 0.1);
+
+  /* Star colors — UNCHANGED */
+  --clr-chinh-tinh: #d32f2f;
+  --clr-cat-tinh: #1976d2;
+  --clr-sat-tinh: #388e3c;
+  --clr-tuan-triet: #5e35b1;
+
+  /* Shadcn tokens */
+  --border: hsl(240 5.9% 90%);
+  --ring: hsl(240 5.9% 10%);
+  --card-bg: #ffffff;
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+
+  --house-border: #B8860B;
+  /* Dark gold for grid lines */
+  --house-bg: #FFFDF4;
+  /* Light gold for house cells */
+
+  font-family: 'Inter', sans-serif;
+}
+
+/* Reset — scoped to .tuvi-context only */
+.tuvi-context *,
+.tuvi-context *::before,
+.tuvi-context *::after {
+  box-sizing: border-box;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+}
+
+
+
+.text-primary {
+  color: var(--primary-dark) !important;
+}
+
+.text-danger {
+  color: var(--clr-chinh-tinh) !important;
+}
+
+.fw-bold {
+  font-weight: 600;
+}
+
+.mt-2 {
+  margin-top: 10px;
+}
+
+/* ========================================
+   APP CONTAINER
+   ======================================== */
+.app-container {
+  width: 100%;
+  max-width: 1060px;
+  padding: 30px 15px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   FORM (Shadcn Card Style)
+   ======================================== */
+.form-container {
+  max-width: 600px;
+  margin: 0 auto 40px auto;
+  text-align: center;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--card-shadow);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.tuvi-context .glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  box-shadow: var(--shadow-glass);
+  padding: 28px;
+}
+
+.main-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.tuvi-context form {
+  text-align: left;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row>.form-group {
+  flex: 1;
+}
+
+.tuvi-context label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
+.dark .tuvi-context label {
+  color: #e8d5c4;
+}
+
+.tuvi-context input[type="text"],
+.tuvi-context input[type="number"],
+.tuvi-context select {
+  display: flex;
+  height: 36px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: transparent;
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: var(--text-main);
+  transition: box-shadow 0.15s, border-color 0.15s;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.dark .tuvi-context input[type="text"],
+.dark .tuvi-context input[type="number"],
+.dark .tuvi-context select {
+  color: #e8d5c4;
+  border-color: rgba(212, 160, 23, 0.15);
+  background-color: rgba(20, 6, 6, 0.5);
+}
+
+.tuvi-context input:focus,
+.tuvi-context select:focus {
+  outline: none;
+  border-color: var(--ring);
+  box-shadow: 0 0 0 1px var(--ring);
+}
+
+.dark .tuvi-context input:focus,
+.dark .tuvi-context select:focus {
+  border-color: rgba(212, 160, 23, 0.4);
+  box-shadow: 0 0 0 1px rgba(212, 160, 23, 0.4);
+}
+
+.tuvi-context input::placeholder {
+  color: var(--text-muted);
+}
+
+.dark .tuvi-context input::placeholder {
+  color: #8a7560;
+}
+
+.radio-group {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  height: 36px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 400;
+  cursor: pointer;
+  font-size: 0.875rem;
+  margin-bottom: 0;
+}
+
+.radio-group input[type="radio"] {
+  margin: 0;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ring);
+  cursor: pointer;
+}
+
+.date-inputs,
+.time-inputs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.separator {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.btn-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 100%;
+  margin-top: 10px;
+  border-radius: 6px;
+  background-color: var(--ring);
+  color: hsl(0 0% 98%);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-submit:hover {
+  background-color: hsl(240 5.9% 10% / 0.9);
+}
+
+/* ========================================
+   CHART CONTAINER
+   ======================================== */
+.chart-container {
+  animation: fadeIn 0.5s ease;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 8px;
+  /* For scrollbar visibility */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   ACTION BAR (Below chart)
+   ======================================== */
+.action-bar {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background-color: var(--card-bg);
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  gap: 6px;
+}
+
+.btn-outline:hover {
+  background-color: hsl(240 4.8% 95.9%);
+  border-color: hsl(240 5.9% 80%);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--ring);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  gap: 6px;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+/* ========================================
+   12 HOUSES GRID LAYOUT (Equal cells!)
+   ======================================== */
+.tuvi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  background: var(--house-border);
+  gap: 1px;
+  border: 2px solid var(--house-border);
+  border-radius: 0;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  min-width: 600px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* House cell */
+.house {
+  background: var(--house-bg);
+  position: relative;
+  padding: 8px 4px;
+  /* Reduced padding */
+  display: flex;
+  flex-direction: column;
+  font-size: 10px;
+  overflow: visible;
+  border: none;
+  min-height: 110px;
+}
+
+
+/* Rounded corners on outer edge cells */
+.h-ty {
+  grid-area: 1/1/2/2;
+}
+
+.h-ngo {
+  grid-area: 1/2/2/3;
+}
+
+.h-mui {
+  grid-area: 1/3/2/4;
+}
+
+.h-than {
+  grid-area: 1/4/2/5;
+}
+
+.h-thin {
+  grid-area: 2/1/3/2;
+}
+
+.h-dau {
+  grid-area: 2/4/3/5;
+}
+
+.h-mao {
+  grid-area: 3/1/4/2;
+}
+
+.h-tuat {
+  grid-area: 3/4/4/5;
+}
+
+.h-dan {
+  grid-area: 4/1/5/2;
+}
+
+.h-suu {
+  grid-area: 4/2/5/3;
+}
+
+.h-zi {
+  grid-area: 4/3/5/4;
+}
+
+.h-hoi {
+  grid-area: 4/4/5/5;
+}
+
+/* Địa Chi watermark */
+.dia-chi-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  font-weight: 700;
+  color: rgba(212, 175, 55, 0.06);
+  font-family: 'Inter', system-ui, sans-serif;
+  pointer-events: none;
+  z-index: 0;
+  user-select: none;
+  white-space: nowrap;
+  letter-spacing: 1px;
+}
+
+/* ========================================
+   THIEN BAN (Center 2x2) Refactored Light Theme
+   ======================================== */
+.thien-ban {
+  grid-area: 2/2/4/4;
+  background: var(--house-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 6px 12px;
+  position: relative;
+  border-radius: 4px;
+  /* Optional, slightly softer corner inside grid */
+}
+
+/* Header */
+.tb-header {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #556270;
+  /* Slate blue/gray like ref */
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.tb-badges {
+  display: flex;
+  gap: 6px;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.tb-badge-pink {
+  background: #FCE4E4;
+  color: #C62828;
+  padding: 4px 14px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.tb-badge-gray {
+  background: #F0F2F5;
+  color: #37474F;
+  padding: 4px 14px;
+  border-radius: 16px;
+  font-weight: 600;
+}
+
+.tb-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tb-col-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tb-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 11px;
+}
+
+.tb-label {
+  color: #78909C;
+  /* Light bluish gray */
+  font-weight: 500;
+}
+
+/* Values styling based on ref image */
+.tb-value-black {
+  color: #000000;
+  font-weight: 700;
+}
+
+.tb-value-purple {
+  color: #8E24AA;
+  font-weight: 700;
+}
+
+.tb-value-green {
+  color: #2E7D32;
+  font-weight: 700;
+}
+
+.tb-value-orange {
+  color: #E65100;
+  font-weight: 700;
+}
+
+.mono {
+  font-family: monospace;
+  font-size: 12px;
+}
+
+/* Divider line */
+.tb-divider {
+  border: 0;
+  border-bottom: 1px solid #ECEFF1;
+  margin: 2px 0;
+}
+
+/* 3 panels bottom */
+.tb-three-panels {
+  display: flex;
+  gap: 6px;
+  justify-content: space-between;
+}
+
+.tb-panel {
+  flex: 1;
+  background: #F8F9FA;
+  border-radius: 8px;
+  padding: 6px 2px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tb-panel-label {
+  color: #78909C;
+  font-weight: 500;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tb-panel-val {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.text-red {
+  color: #D32F2F;
+}
+
+.text-orange {
+  color: #E65100;
+}
+
+.year-view {
+  align-items: center;
+  margin-top: 4px;
+}
+
+.bold-large {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* ========================================
+   HOUSE HEADER
+   ======================================== */
+.house-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 4px;
+  /* Tăng padding + margin để tạo khoảng chữ T rộng hơn */
+  margin-bottom: 6px;
+  font-family: 'Inter', system-ui, sans-serif;
+  position: relative;
+}
+
+.cung-name {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chi-name {
+  font-weight: 500;
+  color: var(--text-muted);
+  font-size: 8px;
+}
+
+/* ========================================
+   STARS
+   ======================================== */
+.stars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 8px;
+}
+
+.stars-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+.stars-container::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 3px;
+}
+
+.stars-left,
+.stars-right {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.stars-left {
+  align-items: flex-start;
+}
+
+.stars-right {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.stars-group {
+  display: flex;
+  justify-content: space-between;
+}
+
+.star {
+  font-weight: 500;
+  line-height: 1.25;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 10px;
+}
+
+.star-major {
+  color: var(--clr-chinh-tinh);
+  font-weight: 700;
+  font-size: 10px;
+  text-transform: uppercase;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.star-good {
+  color: var(--clr-cat-tinh);
+}
+
+.star-bad {
+  color: var(--clr-sat-tinh);
+}
+
+.star-luu {
+  color: #e65100;
+  font-weight: normal;
+}
+
+/* Ngũ Hành Colors — UNCHANGED */
+.nh-kim {
+  color: #808080 !important;
+}
+
+.nh-moc {
+  color: #008000 !important;
+}
+
+.nh-thuy {
+  color: #000000 !important;
+}
+
+.nh-hoa {
+  color: #ff0000 !important;
+}
+
+.nh-tho {
+  color: #ffa500 !important;
+}
+
+/* ========================================
+   TUẦN / TRIỆT BADGES
+   ======================================== */
+.tt-badge {
+  position: absolute;
+  background-color: var(--ring);
+  color: #fff;
+  padding: 1px 3px;
+  /* Scaled down */
+  border-radius: 3px;
+  font-size: 9px;
+  /* Scaled down */
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: auto;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.2;
+}
+
+.triet-badge {
+  background-color: hsl(240 5.9% 25%);
+}
+
+.tuan-badge {
+  background-color: hsl(240 5.9% 10%);
+}
+
+.pos-ty-suu {
+  top: 75%;
+  left: 50%;
+}
+
+.pos-dan-mao {
+  top: 75%;
+  left: 12.5%;
+}
+
+.pos-thin-ty {
+  top: 25%;
+  left: 12.5%;
+}
+
+.pos-ngo-mui {
+  top: 25%;
+  left: 50%;
+}
+
+.pos-than-dau {
+  top: 25%;
+  left: 87.5%;
+}
+
+.pos-tuat-hoi {
+  top: 75%;
+  left: 87.5%;
+}
+
+/* Brightness Annotation */
+.bright-text {
+  color: #ff0000;
+  font-weight: bold;
+  font-size: 0.85em;
+  margin-left: 2px;
+}
+
+/* Lưu Tháng pill */
+.luu-thang {
+  background-color: var(--primary-clr);
+  color: #fff;
+  font-weight: bold;
+  font-size: 11px;
+  padding: 1px 5px;
+  border-radius: 10px;
+  margin-bottom: 3px;
+  display: inline-block;
+}
+
+/* ========================================
+   OUTER LABELS (unused but kept)
+   ======================================== */
+.dv-outer-label {
+  position: absolute;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-dark);
+  white-space: nowrap;
+  background: var(--bg-page);
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  font-family: 'Inter', sans-serif;
+  text-transform: capitalize;
+}
+
+.pos-top-outer {
+  bottom: 100%;
+  margin-bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pos-bottom-outer {
+  top: 100%;
+  margin-top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.pos-left-outer {
+  right: 100%;
+  margin-right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pos-right-outer {
+  left: 100%;
+  margin-left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+/* ========================================
+   BADGE STYLE (ĐV number, Tháng)
+   ======================================== */
+.badge-dv,
+.badge-thang {
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 11px;
+  background: rgba(212, 175, 55, 0.1);
+  padding: 1px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.3;
 }

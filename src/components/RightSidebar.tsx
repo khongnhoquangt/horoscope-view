@@ -1,6 +1,7 @@
+import type { FC } from 'react'
 import { Search, Star, Compass, Calendar, Heart, TrendingUp, Clock } from 'lucide-react'
 
-export default function RightSidebar() {
+const RightSidebar: FC = () => {
   return (
     <aside className="w-full lg:w-64 xl:w-72 shrink-0 space-y-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
       {/* Search Widget */}
@@ -114,3 +115,5 @@ export default function RightSidebar() {
     </aside>
   )
 }
+
+export default RightSidebar

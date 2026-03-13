@@ -1,19 +1,28 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { useSearch, Link } from '@tanstack/react-router'
+import type { FC } from 'react'
+import { useSearch } from '@tanstack/react-router'
 import {
   Download, Share2, Check, Facebook,
-  Sparkles, Star, Award, Quote, User, PlusCircle,
-  MessageSquareHeart, BookOpen, Calendar, Eye
+  Sparkles, Star, Quote, User, PlusCircle,
+  MessageSquareHeart
 } from 'lucide-react'
 import RightSidebar from '../components/RightSidebar'
 import Footer from '../components/Footer'
 
-export default function KetQuaLaSo() {
+// Extend Window for tuvi-logic.js globals
+declare global {
+  interface Window {
+    generateChart?: () => void
+    changeYearView?: (delta: number) => void
+  }
+}
+
+const KetQuaLaSo: FC = () => {
   const search = useSearch({ from: '/ket-qua-la-so' })
   const { name, gender, d: day, m: month, y: year, cal, h: hour, min, vy: viewYear } = search
 
   const [shareText, setShareText] = useState('Chia sẻ')
-  const chartRef = useRef(null)
+  const chartRef = useRef<HTMLDivElement>(null)
 
   // Build title string
   const titleStr = `Luận Giải Lá Số ${name} Sinh ${hour} giờ ${min} phút ngày ${day} tháng ${month} năm ${year}`
@@ -25,17 +34,17 @@ export default function KetQuaLaSo() {
     script.onload = () => {
       // After script loads, set form values and generate chart
       setTimeout(() => {
-        const setVal = (id, val) => {
+        const setVal = (id: string, val: string) => {
           const el = document.getElementById(id)
           if (el) {
             if (el.tagName === 'SELECT') {
               el.innerHTML = `<option value="${val}">${val}</option>`
             } else if (el.tagName === 'INPUT') {
-              el.value = val
+              ;(el as HTMLInputElement).value = val
             }
           }
         }
-        const setText = (id, val) => {
+        const setText = (id: string, val: string) => {
           const el = document.getElementById(id)
           if (el) el.textContent = val
         }
@@ -48,10 +57,22 @@ export default function KetQuaLaSo() {
         setVal('selMinute', min)
         setVal('numViewYear', viewYear)
 
-        if (gender === '1' && document.getElementById('genNam')) document.getElementById('genNam').checked = true
-        if (gender === '0' && document.getElementById('genNu')) document.getElementById('genNu').checked = true
-        if (cal === 'solar' && document.getElementById('calSolar')) document.getElementById('calSolar').checked = true
-        if (cal === 'lunar' && document.getElementById('calLunar')) document.getElementById('calLunar').checked = true
+        if (gender === '1') {
+          const genNam = document.getElementById('genNam') as HTMLInputElement | null
+          if (genNam) genNam.checked = true
+        }
+        if (gender === '0') {
+          const genNu = document.getElementById('genNu') as HTMLInputElement | null
+          if (genNu) genNu.checked = true
+        }
+        if (cal === 'solar') {
+          const calSolar = document.getElementById('calSolar') as HTMLInputElement | null
+          if (calSolar) calSolar.checked = true
+        }
+        if (cal === 'lunar') {
+          const calLunar = document.getElementById('calLunar') as HTMLInputElement | null
+          if (calLunar) calLunar.checked = true
+        }
 
         setText('resultTitle', titleStr)
         setText('descName', name)
@@ -72,7 +93,7 @@ export default function KetQuaLaSo() {
   const handleDownload = useCallback(async () => {
     try {
       const html2canvas = (await import('html2canvas')).default
-      const grid = document.querySelector('.tuvi-grid')
+      const grid = document.querySelector('.tuvi-grid') as HTMLElement | null
       if (!grid) return
 
       await new Promise(r => setTimeout(r, 200))
@@ -100,22 +121,22 @@ export default function KetQuaLaSo() {
       const pL = Math.max(0, Math.abs(oLeft) + 10)
       const pR = Math.max(0, oRight + 10)
 
-      const canvas = await html2canvas(grid, {
+      const canvas = await html2canvas(grid as HTMLElement, {
         scale: 2, backgroundColor: '#ffffff', useCORS: true, logging: false, allowTaint: true,
         y: -pT, x: -pL,
         width: gridRect.width + pL + pR, height: gridRect.height + pT + pB,
         windowWidth: document.body.scrollWidth, windowHeight: document.body.scrollHeight,
         onclone: (clonedDoc) => {
-          const cg = clonedDoc.querySelector('.tuvi-grid')
+          const cg = clonedDoc.querySelector('.tuvi-grid') as HTMLElement | null
           if (!cg) return
           cg.style.cssText = `display:block;position:relative;width:${gridRect.width}px;height:${gridRect.height}px;overflow:visible;border:none;padding:0;margin:0;`
           cells.forEach((lc, i) => {
-            const m = cellMetrics[i], cc = cg.children[i]
+            const m = cellMetrics[i], cc = cg.children[i] as HTMLElement | undefined
             if (cc) {
               cc.style.cssText = `position:absolute;left:${m.left}px;top:${m.top}px;width:${m.width}px;height:${m.height}px;margin:0;padding:${getComputedStyle(lc).padding};overflow:visible;`
             }
           })
-          clonedDoc.querySelectorAll('.tt-badge').forEach(b => { b.style.zIndex = '9999'; b.style.overflow = 'visible' })
+          clonedDoc.querySelectorAll('.tt-badge').forEach(b => { (b as HTMLElement).style.zIndex = '9999'; (b as HTMLElement).style.overflow = 'visible' })
         }
       })
 
@@ -416,3 +437,5 @@ export default function KetQuaLaSo() {
     </div>
   )
 }
+
+export default KetQuaLaSo

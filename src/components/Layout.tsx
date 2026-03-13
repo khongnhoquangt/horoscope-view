@@ -1,12 +1,30 @@
 import { useState, useEffect, useCallback } from 'react'
+import type { FC } from 'react'
 import { Outlet, Link, useLocation } from '@tanstack/react-router'
 import {
   Sparkles, LayoutDashboard, Star, Calendar, UserCircle, Compass,
   Heart, ChevronDown, X, Menu, Search, Sun, Moon, Bell, Crown,
   Settings, ArrowUp
 } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 
-const menuGroups = [
+interface MenuItem {
+  href: string
+  label: string
+}
+
+interface MenuGroup {
+  id: string
+  label: string
+  icon: LucideIcon
+  iconColor: string
+  defaultOpen?: boolean
+  items: MenuItem[]
+  subheader?: string
+  subItems?: MenuItem[]
+}
+
+const menuGroups: MenuGroup[] = [
   {
     id: 'tuvi',
     label: 'Tử Vi',
@@ -81,9 +99,9 @@ const menuGroups = [
   },
 ]
 
-export default function Layout() {
+const Layout: FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [openMenus, setOpenMenus] = useState({ tuvi: true })
+  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({ tuvi: true })
   const [showFab, setShowFab] = useState(false)
   const location = useLocation()
 
@@ -112,7 +130,7 @@ export default function Layout() {
     }
   }, [])
 
-  const toggleMenu = useCallback((menuId) => {
+  const toggleMenu = useCallback((menuId: string) => {
     setOpenMenus((prev) => ({ ...prev, [menuId]: !prev[menuId] }))
   }, [])
 
@@ -133,10 +151,10 @@ export default function Layout() {
 
   // Keyboard shortcut for search
   useEffect(() => {
-    const handler = (e) => {
+    const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
-        document.querySelector('input[type="text"]')?.focus()
+        ;(document.querySelector('input[type="text"]') as HTMLInputElement | null)?.focus()
       }
     }
     document.addEventListener('keydown', handler)
@@ -147,8 +165,8 @@ export default function Layout() {
     document.querySelector('.custom-scrollbar')?.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  const handleScroll = useCallback((e) => {
-    setShowFab(e.target.scrollTop > 300)
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    setShowFab((e.target as HTMLDivElement).scrollTop > 300)
   }, [])
 
   return (
@@ -348,3 +366,5 @@ export default function Layout() {
     </div>
   )
 }
+
+export default Layout

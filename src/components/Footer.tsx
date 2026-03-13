@@ -1,6 +1,7 @@
+import type { FC } from 'react'
 import { Sparkles, Facebook, Youtube, Twitter, Gift, ArrowRight, Mail } from 'lucide-react'
 
-export default function Footer() {
+const Footer: FC = () => {
   return (
     <>
       {/* Newsletter Section */}
@@ -97,3 +98,5 @@ export default function Footer() {
     </>
   )
 }
+
+export default Footer

@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
+import type { FC, FormEvent } from 'react'
 import { useNavigate } from '@tanstack/react-router'
 import {
   Sparkles, Facebook, ChevronDown, Check, PlusCircle,
@@ -8,7 +9,7 @@ import {
 import RightSidebar from '../components/RightSidebar'
 import Footer from '../components/Footer'
 
-export default function LapLaSo() {
+const LapLaSo: FC = () => {
   const navigate = useNavigate()
 
   // Form state
@@ -37,7 +38,7 @@ export default function LapLaSo() {
   const currentYear = new Date().getFullYear()
   const viewYears = Array.from({ length: 20 }, (_, i) => currentYear - 5 + i)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const d = manualDate ? dayManual : day
     const m = manualDate ? monthManual : month
@@ -606,3 +607,5 @@ export default function LapLaSo() {
     </div>
   )
 }
+
+export default LapLaSo
