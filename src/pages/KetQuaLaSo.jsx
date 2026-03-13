@@ -18,15 +18,8 @@ export default function KetQuaLaSo() {
   // Build title string
   const titleStr = `Luận Giải Lá Số ${name} Sinh ${hour} giờ ${min} phút ngày ${day} tháng ${month} năm ${year}`
 
-  // Load external tuvi-logic.js script
+  // Load external tuvi-logic.js script (CSS is imported statically via index.css)
   useEffect(() => {
-    // Load CSS
-    const link = document.createElement('link')
-    link.rel = 'stylesheet'
-    link.href = '/tuvi-generator.css'
-    document.head.appendChild(link)
-
-    // Load script
     const script = document.createElement('script')
     script.src = '/tuvi-logic.js?v=20260305c'
     script.onload = () => {
@@ -71,7 +64,6 @@ export default function KetQuaLaSo() {
     document.body.appendChild(script)
 
     return () => {
-      document.head.removeChild(link)
       document.body.removeChild(script)
     }
   }, [name, gender, day, month, year, cal, hour, min, viewYear, titleStr])
