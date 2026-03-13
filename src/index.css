@@ -95,9 +95,9 @@ body.dark {
 }
 
 .dark .glass-panel {
-  background: rgba(18, 6, 6, 0.75);
-  border: 1px solid rgba(212, 160, 23, 0.08);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(212, 160, 23, 0.04);
+  background: rgba(18, 6, 6, 0.75) !important;
+  border: 1px solid rgba(212, 160, 23, 0.08) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(212, 160, 23, 0.04) !important;
 }
 
 .glass-card {
